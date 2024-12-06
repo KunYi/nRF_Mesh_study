@@ -2,17 +2,22 @@
 #define DEVICE_CONFIG_H
 
 #include <zephyr/bluetooth/mesh.h>
+#include "vendor_model.h"
 
 /* Device UUID for provisioning */
-static uint8_t dev_uuid[16] = { 0xcc, 0xcc };
+#define DEV_UUID { 0xcc, 0xcc }
 
 /* Health Server */
-extern struct bt_mesh_health_srv health_srv;
-extern struct bt_mesh_health_srv_cb health_srv_cb;
-extern const struct bt_mesh_health_srv_cb health_srv_cb;
-extern struct bt_mesh_health_pub health_pub;
+#define HEALTH_SRV_CB { \
+    .attn_on = NULL, \
+    .attn_off = NULL, \
+}
 
-/* Provisioning */
-extern const struct bt_mesh_prov prov;
+#define HEALTH_PUB { \
+    .msg = NULL, \
+}
+
+/* Model Operation Arrays */
+extern const struct bt_mesh_model_op vendor_cli_op[];
 
 #endif /* DEVICE_CONFIG_H */

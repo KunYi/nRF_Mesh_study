@@ -2,16 +2,16 @@
 #include "vendor_model.h"
 
 /* Forward declarations of message handlers */
-static void handle_led_set(struct bt_mesh_model *model,
-                         struct bt_mesh_msg_ctx *ctx,
-                         struct net_buf_simple *buf);
-static void handle_led_get(struct bt_mesh_model *model,
-                         struct bt_mesh_msg_ctx *ctx,
-                         struct net_buf_simple *buf);
-static void handle_led_status(struct bt_mesh_model *model,
+static int handle_led_set(const struct bt_mesh_model *model,
+                        struct bt_mesh_msg_ctx *ctx,
+                        struct net_buf_simple *buf);
+static int handle_led_get(const struct bt_mesh_model *model,
+                        struct bt_mesh_msg_ctx *ctx,
+                        struct net_buf_simple *buf);
+static int handle_led_status(const struct bt_mesh_model *model,
                            struct bt_mesh_msg_ctx *ctx,
                            struct net_buf_simple *buf);
-static void handle_button_press(struct bt_mesh_model *model,
+static int handle_button_press(const struct bt_mesh_model *model,
                              struct bt_mesh_msg_ctx *ctx,
                              struct net_buf_simple *buf);
 
@@ -29,9 +29,9 @@ const struct bt_mesh_model_op vendor_cli_op[] = {
 };
 
 /* Message handlers */
-static void handle_led_set(struct bt_mesh_model *model,
-                         struct bt_mesh_msg_ctx *ctx,
-                         struct net_buf_simple *buf)
+static int handle_led_set(const struct bt_mesh_model *model,
+                        struct bt_mesh_msg_ctx *ctx,
+                        struct net_buf_simple *buf)
 {
     struct bt_mesh_vendor_model_srv *srv = model->user_data;
     uint8_t led_index = net_buf_simple_pull_u8(buf);
@@ -52,11 +52,13 @@ static void handle_led_set(struct bt_mesh_model *model,
         .led_state = led_state
     };
     bt_mesh_vendor_model_srv_led_status_send(srv, ctx, &status);
+    
+    return 0;
 }
 
-static void handle_led_get(struct bt_mesh_model *model,
-                         struct bt_mesh_msg_ctx *ctx,
-                         struct net_buf_simple *buf)
+static int handle_led_get(const struct bt_mesh_model *model,
+                        struct bt_mesh_msg_ctx *ctx,
+                        struct net_buf_simple *buf)
 {
     struct bt_mesh_vendor_model_srv *srv = model->user_data;
     uint8_t led_index = net_buf_simple_pull_u8(buf);
@@ -71,9 +73,11 @@ static void handle_led_get(struct bt_mesh_model *model,
         .led_state = (led_index < 4) ? srv->led_states[led_index] : LED_OFF
     };
     bt_mesh_vendor_model_srv_led_status_send(srv, ctx, &status);
+    
+    return 0;
 }
 
-static void handle_led_status(struct bt_mesh_model *model,
+static int handle_led_status(const struct bt_mesh_model *model,
                            struct bt_mesh_msg_ctx *ctx,
                            struct net_buf_simple *buf)
 {
@@ -86,11 +90,13 @@ static void handle_led_status(struct bt_mesh_model *model,
     if (cli->handlers.led_status) {
         cli->handlers.led_status(cli, ctx, &status);
     }
+    
+    return 0;
 }
 
-static void handle_button_press(struct bt_mesh_model *model,
-                             struct bt_mesh_msg_ctx *ctx,
-                             struct net_buf_simple *buf)
+static int handle_button_press(const struct bt_mesh_model *model,
+                            struct bt_mesh_msg_ctx *ctx,
+                            struct net_buf_simple *buf)
 {
     struct bt_mesh_vendor_model_srv *srv = model->user_data;
     struct button_press press;
@@ -101,6 +107,8 @@ static void handle_button_press(struct bt_mesh_model *model,
     if (srv->handlers.button_pressed) {
         srv->handlers.button_pressed(srv, ctx, &press);
     }
+    
+    return 0;
 }
 
 /* Client API Implementation */
