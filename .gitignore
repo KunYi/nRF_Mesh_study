@@ -1,0 +1,58 @@
+# Build directories
+/build*/
+/button_client/build*/
+/light_server/build*/
+
+# Generated files
+*.o
+*.a
+*.d
+*.cmd
+*.log
+*.pyc
+__pycache__/
+*.swp
+*.swo
+
+# IDE specific files
+.vscode/
+.idea/
+*.iml
+.west/
+
+# CMake files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+
+# Zephyr specific
+compile_commands.json
+.config
+*.config
+prj.conf.old
+
+# Debug files
+*.elf
+*.map
+*.lst
+*.sym
+
+# Nordic specific
+.DS_Store
+*.emProject
+*.jlink
+*.emSession
+
+# Environment files
+.env
+venv/
+.venv/
+
+# Temporary files
+*.tmp
+*.bak
+*~
+
+# Tags
+tags
+TAGS
